@@ -663,22 +663,22 @@ const Atom = (function() {
                 console.log(e);
                 setInterval(function() {
                     prism.rotate(Math.PI / 360, Math.PI / 360);
-                }, 10);
+                }, 500);
             });
 
             setInterval(function() {
                 if (isRotating) prism.rotate(Math.PI / 360 * i, Math.PI / 360 * i);
-            }, 10);
+            }, 500);
 
             cube.addEventListener("click", function(e) {
                 setInterval(function() {
                     cube.rotate(Math.PI / 360, Math.PI / 360);
-                }, 10);
+                }, 500);
             });
 
             setInterval(function() {
                 if (isRotating) cube.rotate(-Math.PI / 360 * i, -Math.PI / 360 * i);
-            }, 10);
+            }, 500);
         }
 
         let rothsch = new Audio("/atom-3d/media/rothsch.ogg");
