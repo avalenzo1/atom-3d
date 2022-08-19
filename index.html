@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    <base href="/">
+    <title>Atom Canvas</title>
+</head>
+
+<body>
+    <main id="main" class="atom">
+        <nav class="atom-nav" id="atom-nav">
+            <ul>
+                <li>
+                    <button class="list-item ripple">File</button>
+                    <ul class="atom-nav__opt">
+                        <li>
+                            <button class="list-item ripple">File</button>
+                        </li>
+                        <li>
+                            <button class="list-item ripple">Edit</button>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <button class="list-item ripple">Edit</button>
+                </li>
+            </ul>
+        </nav>
+        <div class="atom-content">
+            <aside class="atom-content__aside atom-rack atom-draggable" data-side="right">
+                <div class="atom-rack__mount">
+                    <header class="atom-mount__header">Layers</header>
+
+                    <main class="atom-mount__body">
+                        <ul class="atom-body__layers" ondragstart="" id="layers">
+
+                        </ul>
+                    </main>
+
+                    <footer class="atom-mount__footer">
+                        <ul class="atom-footer__options" ondragstart="" id="layers">
+                            <button class="atom-btn ripple" id="layers-btn-add">+</button>
+                        </ul>
+                    </footer>
+                </div>
+                <div class="atom-rack__mount">
+                    <header class="atom-mount__header">
+                        Object
+                    </header>
+                    <main class="atom-mount__body">
+                        <section>
+                            <strong>Object Type</strong>
+                            <div>
+                                <input class="atom-form-control" type="radio" name="object-type" value="Rectangular Prism" id="object-rectangle">
+                                <label for="object-rectangle">Rectangular Prism</label>
+                            </div>
+                            <div>
+                                <input class="atom-form-control" type="radio" name="object-type" value="Cube" id="object-square">
+                                <label for="object-cube">Cube</label>
+                            </div>
+                            <div>
+                                <input class="atom-form-control" type="radio" name="object-type" value="Polygon" id="object-polygon">
+                                <label for="object-polygon">Polygon Shape</label>
+                            </div>
+                            <div>
+                                <input class="atom-form-control" type="radio" name="object-type" value="Circle" id="object-sphere">
+                                <label for="object-sphere">Sphere</label>
+                            </div>
+                            <div>
+                                <input class="atom-form-control" type="radio" name="object-type" value="Paint" id="object-paint" checked>
+                                <label for="object-paint">Paint</label>
+                            </div>
+                            <div>
+                                <input class="atom-form-control" type="radio" name="object-type" value="Image" id="object-image">
+                                <label for="object-image">Image</label>
+                            </div>
+                        </section>
+                        <hr>
+                        <section>
+                            <strong>Fill Type</strong>
+                            <div>
+                                <input class="atom-form-control" type="checkbox" name="object-fill" value="Fill" id="object-fill">
+                                <label for="object-fill">Fill</label>
+                            </div>
+                            <div>
+                                <input class="atom-form-control" type="checkbox" name="object-stroke" value="Stroke" id="object-stroke" checked>
+                                <label for="object-stroke">Stroke</label>
+                            </div>
+                        </section>
+                    </main>
+                </div>
+            </aside>
+            <article class="atom-content__canvas">
+                <canvas id="canvas" tabindex="0"></canvas>
+            </article>
+            <aside class="atom-content__aside atom-draggable atom-rack" data-side="left">
+                <div class="atom-rack__mount">
+                    <header class="atom-mount__header">Styling</header>
+
+                    <main class="atom-mount__body">
+                        <ul class="atom-body__layers" id="layers">
+                            <div>
+                                <div>
+                                    <strong>Stroke</strong>
+                                    <div>
+                                        <label for="stroke-width">Line Width: </label>
+                                        <input class="atom-form-control" type="number" placeholder="Stoke Width" id="stroke-width" value="1" min="1">
+                                    </div>
+                                    <div>
+                                        <strong>Line Join</strong>
+                                        <div>
+                                            <input type="radio" name="line-join" id="join-round" value="round" checked>
+                                            <label for="join-round">Round</label>
+                                        </div>
+                                        <div>
+                                            <input type="radio" name="line-join" id="join-bevel" value="bevel">
+                                            <label for="join-round">Bevel</label>
+                                        </div>
+                                        <div>
+                                            <input type="radio" name="line-join" id="join-miter" value="miter">
+                                            <label for="join-round">Miter</label>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label for="stroke-color">Stroke Color: </label>
+                                        <input type="color" id="stroke-color" value="#000000">
+                                    </div>
+                                </div>
+                                <hr>
+                                <div>
+                                    <strong>Fill</strong>
+                                    <div>
+                                        <label for="fill-color">Fill Color: </label>
+                                        <input type="color" id="fill-color" value="#fcfcfc">
+                                    </div>
+                                </div>
+                            </div>
+                        </ul>
+                    </main>
+                </div>
+            </aside>
+        </div>
+
+        <footer class="atom-footer atom-draggable" data-side="top">
+            <h2>Console</h2>
+            <code id="debug">
+                <p>BTW, This is an adaptation of <a target="_blank" href="https://www.sitepoint.com/building-3d-engine-javascript/">Jérémy Heleine's Tutorial</a> on 3d Rendering</p>
+                <p>Ctrl + Alt + [1 or 2] to play some of my music 😀</p>
+                <p>Use W, A, S, D and Arrow Keys to move around!</p>
+            </code>
+        </footer>
+    </main>
+    <script async src="https://unpkg.com/es-module-shims@1.3.6/dist/es-module-shims.js"></script>
+    <script src="js/app.js" defer>
+    </script>
+    <script src="js/ripple.js" defer></script>
+</body>
+
+</html>
