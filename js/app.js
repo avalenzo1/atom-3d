@@ -133,6 +133,10 @@ const Atom = (function() {
         return vertices;
     }
 
+    const VertexDistance = (v1, v2) => {
+        return Math.sqrt((v2.x - v1.x) ** 2 + (v2.y - v1.y) ** 2 + (v2.z - v1.z) ** 2);
+    }
+
     class Mesh {
         constructor(camera, center, faces, vertices, quaternion, style, ruleSets) {
             this.parentLayer;
@@ -184,16 +188,10 @@ const Atom = (function() {
             }
         }
 
-        set layer(layer) {
+        set setParentLayer(layer) {
             if (layer instanceof Layer) {
                 this.parentLayer = layer;
-            } else {
-                console.log("b r u h");
             }
-        }
-
-        distance(v1, v2) {
-            return Math.sqrt((v2.x - v1.x) ** 2 + (v2.y - v1.y) ** 2 + (v2.z - v1.z) ** 2);
         }
 
         sort() {
@@ -204,8 +202,8 @@ const Atom = (function() {
                 let b_count = 0;
 
                 for (let k = 0, n_vertices = a.length; k < n_vertices; ++k) {
-                    let a_dist = this.distance(a[k], this.camera);
-                    let b_dist = this.distance(b[k], this.camera);
+                    let a_dist = VertexDistance(a[k], this.camera);
+                    let b_dist = VertexDistance(b[k], this.camera);
 
                     if (a_dist > b_dist) {
                         a_count++;
@@ -227,26 +225,27 @@ const Atom = (function() {
             this.faces.sort(compare);
         }
 
-        onclick = (callback) => {
-            let cache = this;
-            canvas.addEventListener("click", function(e) {
-                if (cache.checkIfInContact(e)) callback();
-            });
-        }
-
-        checkIfInContact(e) {
+        addEventListener = (type, callback) => {
             let cache = this;
 
-            for (let face in this.renderedFaces) {
-                if (ctx.isPointInPath(this.renderedFaces[face], e.offsetX, e.offsetY)) {
-                    let oldStrokeStyle = this.style.strokeStyle;
+            canvas.addEventListener(type, function(e) {
+                if (cache.checkIfInContact(e)) {
+                    let oldStrokeStyle = cache.style.strokeStyle;
 
-                    this.style.strokeStyle = "#f00000";
+                    cache.style.strokeStyle = "#f00000";
 
                     setTimeout(function() {
                         cache.style.strokeStyle = oldStrokeStyle;
                     }, 100);
 
+                    callback(e);
+                }
+            });
+        }
+
+        checkIfInContact(e) {
+            for (let face in this.renderedFaces) {
+                if (ctx.isPointInPath(this.renderedFaces[face], e.offsetX, e.offsetY)) {
                     return true;
                 }
             }
@@ -391,6 +390,7 @@ const Atom = (function() {
     class Layer {
         constructor(name, camera) {
             this.objects = new Array();
+            this.focus = 0;
             this.camera = camera;
             this.name = name;
             this.locked = false;
@@ -398,6 +398,7 @@ const Atom = (function() {
         }
 
         appendObject(object) {
+            object.setParentLayer = this;
             this.objects.push(object);
         }
 
@@ -645,10 +646,21 @@ const Atom = (function() {
         let cache = e;
         let isRotating = false;
 
+        canvas.addEventListener("contextmenu", function(e) {
+            e.preventDefault();
+
+            console.log(e);
+        });
+
         for (let i = 0; i < 15; i++) {
             let prism = new Prism(e.camera, new Vertex(-10 * (i + 1), 10 * i, 10 * i), 10 * (i + 1));
+            let cube = new Cube(e.camera, new Vertex(10 * (i + 1), 10 * i, 10 * i), 10 * (i + 1));
 
-            prism.onclick(function() {
+            e.layers[e.currLayer].appendObject(prism);
+            e.layers[e.currLayer].appendObject(cube);
+
+            prism.addEventListener("mousemove", function(e) {
+                console.log(e);
                 setInterval(function() {
                     prism.rotate(Math.PI / 360, Math.PI / 360);
                 }, 10);
@@ -658,9 +670,7 @@ const Atom = (function() {
                 if (isRotating) prism.rotate(Math.PI / 360 * i, Math.PI / 360 * i);
             }, 10);
 
-            let cube = new Cube(e.camera, new Vertex(10 * (i + 1), 10 * i, 10 * i), 10 * (i + 1));
-
-            cube.onclick(function() {
+            cube.addEventListener("click", function(e) {
                 setInterval(function() {
                     cube.rotate(Math.PI / 360, Math.PI / 360);
                 }, 10);
@@ -669,13 +679,10 @@ const Atom = (function() {
             setInterval(function() {
                 if (isRotating) cube.rotate(-Math.PI / 360 * i, -Math.PI / 360 * i);
             }, 10);
-
-            e.layers[e.currLayer].appendObject(prism);
-            e.layers[e.currLayer].appendObject(cube);
         }
 
-        let rothsch = new Audio("/atom-3d/media/rothsch.ogg");
-        let intro = new Audio("/atom-3d/media/intro.ogg");
+        let rothsch = new Audio("/atom-paint/media/rothsch.ogg");
+        let intro = new Audio("/atom-paint/media/intro.ogg");
 
         rothsch.onplay = () => {
             isRotating = true;
