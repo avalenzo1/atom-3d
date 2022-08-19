@@ -1,0 +1,240 @@
+:root {
+    /* #312f3c */
+    --atom-font: Roboto;
+    --atom-bg: url(https://www.almanac.com/sites/default/files/styles/landscape/public/image_nodes/winter_sunrise-2.jpg?itok=81VQoJGG);
+    --atom-nav-bg: rgb(0 0 0 / 75%);
+    --atom-color: #ffffff;
+    --atom-border-color: 255 255 255;
+    --atom-padding: 15px;
+    --atom-mount-bg: rgb(0 0 0 / 25%);
+    --atom-mount-color: #ffffff;
+    --atom-draggable-border-weight: 2px;
+    --canvas-color: rgb(255 255 255 / 25%);
+    --ripple-color-rgb: 255, 255, 255;
+    --atom-primary: #b300ff;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+}
+
+body {
+    margin: 0;
+    background: var(--atom-bg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    color: var(--atom-color);
+    font-family: var(--atom-font);
+    font-size: calc(0.6em + 1vmin);
+    height: 100vh;
+}
+
+button {
+    font-family: inherit;
+}
+
+.atom {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.atom-nav {
+    background-color: var(--atom-nav-bg);
+}
+
+.atom-nav ul {
+    display: flex;
+    position: relative;
+    backdrop-filter: blur(10px);
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+    gap: 5px;
+    padding: 5px;
+    z-index: 99;
+}
+
+.atom-nav .list-item {
+    position: relative;
+    padding: 7px 15px;
+    border: none;
+    border-radius: 5px;
+    background-color: transparent;
+    color: var(--atom-color);
+}
+
+.atom-nav .list-item:hover {
+    background-color: rgb(255 255 255 / 25%);
+}
+
+.atom-nav ul .atom-nav__opt {
+    display: none;
+    flex-direction: column;
+    position: absolute !important;
+    background-color: var(--atom-nav-bg);
+    min-width: 100px;
+    border-radius: 5px;
+}
+
+ul.atom-nav__opt .list-item {
+    width: 100%;
+}
+
+.atom-content {
+    display: flex;
+    flex-grow: 1;
+}
+
+.atom-content__aside {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: var(--atom-padding);
+    background-color: rgb(0 0 0 / 50%);
+    overflow-y: auto;
+    flex: none;
+}
+
+.atom-content__aside hr {
+    border: none;
+    border-bottom: solid 1px var(--atom-border-color);
+    margin: 5px 0;
+}
+
+.atom-content__aside .atom-rack__mount {
+    background-color: var(--atom-mount-bg);
+    backdrop-filter: blur(10px);
+    color: var(--atom-mount-color);
+    border-radius: 10px;
+    padding: 5px;
+}
+
+.atom-content__aside .atom-rack__mount .atom-form-control {
+    padding: 5px;
+    background-color: transparent;
+    color: rgb(var(--atom-border-color) / 75%);
+    border: 0;
+    border-bottom: solid 1px;
+    outline: none;
+}
+
+.atom-content__aside .atom-rack__mount .atom-form-control:focus {
+    color: rgb(var(--atom-border-color));
+    border-bottom: solid 2px;
+}
+
+.atom-content__aside .atom-rack__mount .atom-mount__header {
+    background-color: rgb(0 0 0 / 25%);
+    padding: 10px 15px;
+    border-radius: 10px;
+    font-weight: bold;
+    cursor: grab;
+    backdrop-filter: blur(10px);
+}
+
+.atom-content__aside .atom-rack__mount .atom-mount__body {
+    padding: 10px 6px;
+}
+
+.atom-content__aside .atom-rack__mount .atom-mount__footer {
+    padding: 5px 10px;
+}
+
+.atom-content__aside .atom-rack__mount .atom-body__layers,
+.atom-content__aside .atom-rack__mount .atom-footer__options {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.atom-content__aside .atom-rack__mount .atom-footer__options {
+    display: flex;
+    justify-content: space-between;
+}
+
+.atom-content__aside .atom-rack__mount .atom-footer__options .atom-btn {
+    background-color: transparent;
+    color: #ffffff;
+    border: 0;
+    border-radius: 15px;
+}
+
+.atom-content__canvas {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1;
+    max-height: 100%;
+}
+
+.atom-content__canvas canvas {
+    cursor: none;
+}
+
+.atom-footer {
+    background: rgb(0 0 0 / 75%);
+    backdrop-filter: blur(10px);
+    padding: var(--atom-padding);
+    overflow-y: auto;
+    max-height: 25%;
+}
+
+.ripple {
+    display: inline-block;
+    text-decoration: none;
+    position: relative;
+    overflow: hidden;
+}
+
+.ripple.ripple-center ._ripple--enter {
+    left: 0 !important;
+    top: 0 !important;
+}
+
+._ripple--enter {
+    z-index: 0;
+    position: absolute;
+    /* The absolute position we mentioned earlier */
+    border-radius: 50%;
+    transform: scale(0);
+    padding: 0.5rem;
+    animation: rippleEnter 0.3s forwards;
+    background-color: rgba(var(--ripple-color-rgb), 0.3);
+    filter: blur(5px);
+}
+
+._ripple--leave {
+    animation: rippleLeave 0.6s;
+}
+
+@keyframes rippleEnter {
+    from {
+        transform: scale(0);
+    }
+    to {
+        transform: scale(2);
+    }
+}
+
+@keyframes rippleLeave {
+    from {
+        transform: scale(2);
+        opacity: 1;
+    }
+    to {
+        transform: scale(2);
+        opacity: 0;
+    }
+}
+
+
+/* Small devices (landscape phones, 576px and up) */
+
+@media only screen and (max-width: 1000px) {
+    .atom-content__aside {
+        display: none;
+    }
+}
