@@ -674,8 +674,8 @@ const Atom = (function() {
             e.layers[e.currLayer].appendObject(cube);
         }
 
-        let rothsch = new Audio("rothsch.ogg");
-        let intro = new Audio("intro.ogg");
+        let rothsch = new Audio("/atom-3d/media/rothsch.ogg");
+        let intro = new Audio("/atom-3d/media/intro.ogg");
 
         rothsch.onplay = () => {
             isRotating = true;
