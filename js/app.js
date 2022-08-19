@@ -681,8 +681,8 @@ const Atom = (function() {
             }, 10);
         }
 
-        let rothsch = new Audio("/atom-paint/media/rothsch.ogg");
-        let intro = new Audio("/atom-paint/media/intro.ogg");
+        let rothsch = new Audio("/atom-3d/media/rothsch.ogg");
+        let intro = new Audio("/atom-3d/media/intro.ogg");
 
         rothsch.onplay = () => {
             isRotating = true;
