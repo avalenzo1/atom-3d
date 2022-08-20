@@ -88,6 +88,30 @@ const Atom = (function() {
         }
     };
 
+    class Color {
+        constructor(r, g, b, a) {
+            this.r = r;
+            this.g = g;
+            this.b = b;
+            this.a = a || 1;
+
+            return;
+        }
+
+        random({ red: r, green: g, blue: b, alpha: a }) {
+            this.r = r || 255 * Math.random();
+            this.g = g || 255 * Math.random();
+            this.b = b || 255 * Math.random();
+            this.a = a || 1 * Math.random();
+
+            return;
+        }
+
+        get toString() {
+            return `rgba(${this.r} ${this.g} ${this.b} / ${this.a})`;
+        };
+    }
+
     class Vertex {
         constructor(x, y, z) {
             this.x = parseFloat(x);
@@ -149,11 +173,20 @@ const Atom = (function() {
             this.faces = faces;
             this.renderedFaces = [];
 
+            this.currentStyle = "default";
             this.style = {
-                lineWidth: document.querySelector("#stroke-width").value || 1,
-                lineJoin: document.querySelector("[name=line-join]:checked").value,
-                strokeStyle: document.querySelector("#stroke-color").value,
-                fillStyle: document.querySelector("#fill-color").value
+                default: {
+                    lineWidth: document.querySelector("#stroke-width").value || 1,
+                    lineJoin: document.querySelector("[name=line-join]:checked").value,
+                    strokeStyle: document.querySelector("#stroke-color").value,
+                    fillStyle: document.querySelector("#fill-color").value,
+                },
+                hover: {
+                    strokeStyle: "#f00"
+                },
+                active: {
+                    strokeStyle: "#f00"
+                }
             }
 
             this.ruleSets = {
@@ -171,12 +204,18 @@ const Atom = (function() {
 
             this.style.lineWidth = (this.ruleSets.usesStroke && this.ruleSets.usesFill) ? this.style.lineWidth * 2 : this.style.lineWidth;
 
+            let bgColor = new Color();
+            bgColor.random({ alpha: 0.05 });
+
+            setInterval(function() {
+                bgColor.random({ alpha: 0.05 });
+            }, 10)
+
             this.ruleSets.get = () => {
-                ctx.lineWidth = this.style.lineWidth;
-                ctx.lineJoin = this.style.lineJoin;
-                ctx.strokeStyle = "#fff";
-                ctx.fillStyle = `rgba(${Math.random() * 255},${Math.random() * 255},${Math.random() * 255},0.05)`;
-                ctx.shadowColor = ctx.strokeStyle;
+                ctx.lineWidth = this.style[this.currentStyle].lineWidth;
+                ctx.lineJoin = this.style[this.currentStyle].lineJoin;
+                ctx.strokeStyle = this.style[this.currentStyle].strokeStyle;
+                ctx.fillStyle = bgColor.toString;
 
                 if (this.ruleSets.usesStroke) {
                     ctx.strokeStyle = this.style.strokeStyle;
@@ -221,8 +260,6 @@ const Atom = (function() {
 
                 return 0;
             }
-
-            this.faces.sort(compare);
         }
 
         addEventListener = (type, callback) => {
@@ -230,12 +267,11 @@ const Atom = (function() {
 
             canvas.addEventListener(type, function(e) {
                 if (cache.checkIfInContact(e)) {
-                    let oldStrokeStyle = cache.style.strokeStyle;
-
-                    cache.style.strokeStyle = "#f00000";
+                    cache.currentStyle = "active";
 
                     setTimeout(function() {
-                        cache.style.strokeStyle = oldStrokeStyle;
+                        console.log()
+                        cache.currentStyle = "default";
                     }, 100);
 
                     callback(e);
@@ -652,7 +688,20 @@ const Atom = (function() {
             console.log(e);
         });
 
-        for (let i = 0; i < 15; i++) {
+        for (let h = 0; h < 5; h++) {
+            for (let v = 0; v < 5; v++) {
+                let cube = new Cube(e.camera, new Vertex(10 * v + (5 * -15), 10 * h, -20), Math.random() * 10);
+                e.layers[e.currLayer].appendObject(cube);
+
+                setInterval(function() {
+                    cube.rotate(Math.PI / 360 * (v + 1), Math.PI / 360 * (v + 1));
+
+
+                }, 100);
+            }
+        }
+
+        for (let i = 0; i < 5; i++) {
             let prism = new Prism(e.camera, new Vertex(-10 * (i + 1), 10 * i, 10 * i), 10 * (i + 1));
             let cube = new Cube(e.camera, new Vertex(10 * (i + 1), 10 * i, 10 * i), 10 * (i + 1));
 
@@ -660,29 +709,28 @@ const Atom = (function() {
             e.layers[e.currLayer].appendObject(cube);
 
             prism.addEventListener("mousemove", function(e) {
-                console.log(e);
                 setInterval(function() {
                     prism.rotate(Math.PI / 360, Math.PI / 360);
-                }, 50);
+                }, 10);
             });
 
             setInterval(function() {
                 if (isRotating) prism.rotate(Math.PI / 360 * i, Math.PI / 360 * i);
-            }, 50);
+            }, 10);
 
             cube.addEventListener("click", function(e) {
                 setInterval(function() {
                     cube.rotate(Math.PI / 360, Math.PI / 360);
-                }, 50);
+                }, 10);
             });
 
             setInterval(function() {
                 if (isRotating) cube.rotate(-Math.PI / 360 * i, -Math.PI / 360 * i);
-            }, 50);
+            }, 10);
         }
 
-        let rothsch = new Audio("/atom-3d/media/rothsch.ogg");
-        let intro = new Audio("/atom-3d/media/intro.ogg");
+        let rothsch = new Audio("rothsch.ogg");
+        let intro = new Audio("intro.ogg");
 
         rothsch.onplay = () => {
             isRotating = true;
