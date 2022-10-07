@@ -26,6 +26,9 @@ class Element {
     }
 }
 
+// convert to pixijs like organization?
+// refactor code and prevent duplicate code...
+
 const Atom = (function() {
     const canvas = document.querySelector("#canvas");
     const layers = document.querySelector("#layers")
