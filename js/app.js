@@ -207,7 +207,7 @@ const Atom = (function() {
 
             this.style.lineWidth = (this.ruleSets.usesStroke && this.ruleSets.usesFill) ? this.style.lineWidth * 2 : this.style.lineWidth;
 
-            let bgColor = new Color(0,0,0,1);
+            let bgColor = new Color(255,255,255,0.75);
 //             bgColor.random({ alpha: 0.05 });
 
             setInterval(function() {
