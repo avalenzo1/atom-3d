@@ -691,16 +691,18 @@ const Atom = (function() {
             console.log(e);
         });
 
-        for (let h = 0; h < 5; h++) {
-            for (let v = 0; v < 5; v++) {
-                let cube = new Cube(e.camera, new Vertex(10 * v + (5 * -15), 10 * h, -20), Math.random() * 10);
-                e.layers[e.currLayer].appendObject(cube);
+        for (let z = 0; z < 5; z++) {
+            for (let h = 0; h < 5; h++) {
+                for (let v = 0; v < 5; v++) {
+                    let cube = new Cube(e.camera, new Vertex(10 * v + (5 * -15), 10 * h, 20 * z), Math.random() * 10);
+                    e.layers[e.currLayer].appendObject(cube);
 
-                setInterval(function() {
-                    cube.rotate(Math.PI / 360 * (v + 1), Math.PI / 360 * (v + 1));
+                    setInterval(function() {
+                        cube.rotate(Math.PI / 360 * (v + 1), Math.PI / 360 * (v + 1));
 
 
-                }, 100);
+                    }, 100);
+                }
             }
         }
 
