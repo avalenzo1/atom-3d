@@ -211,7 +211,7 @@ const Atom = (function() {
 //             bgColor.random({ alpha: 0.05 });
 
             setInterval(function() {
-//                 bgColor.random({ alpha: 0.05 });
+                bgColor.random({ alpha: 0.05 });
             }, 10)
 
             this.ruleSets.get = () => {
